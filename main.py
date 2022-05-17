@@ -19,7 +19,6 @@ class BST:
                     break
                 else:
                     currentNode = currentNode.right
-        # return self
 
     def contains(self, value):
         currentNode = self
@@ -70,18 +69,21 @@ class BST:
         else:
             return self.left.getMinValue()
 
+    def findClosestValueInBST(self, target):
+        closest = float('inf')
+        currentNode = self
+        while currentNode is not None:
+            if abs(target - closest) > abs(target - currentNode.value):
+                closest = currentNode.value
+            if target < currentNode.value:
+                currentNode = currentNode.left
+            elif target > currentNode.value:
+                currentNode = currentNode.right
+            else:
+                break
+        return closest
 
-# root = BST(10)
-# root.left = BST(5)
-# root.left.left = BST(2)
-# root.left.left.left = BST(1)
-# root.left.right = BST(5)
-# root.right = BST(15)
-# root.right.left = BST(13)
-# root.right.left.right = BST(14)
-# root.right.right = BST(22)
-# root.insert(12)
-# print(root.right.left.left.value == 12)
+
 import unittest
 
 
@@ -91,13 +93,13 @@ class TestProgram(unittest.TestCase):
         root.left = BST(5)
         root.left.left = BST(2)
         root.left.left.left = BST(1)
-        root.left.right = BST(5)
+        root.left.right = BST(6)
         root.right = BST(15)
         root.right.left = BST(13)
         root.right.left.right = BST(14)
         root.right.right = BST(22)
 
-        root.insert(12)
+        root.insert(123)
         self.assertTrue(root.right.left.left.value == 12)
 
         root.remove(10)
@@ -105,3 +107,33 @@ class TestProgram(unittest.TestCase):
         self.assertTrue(root.value == 12)
 
         self.assertTrue(root.contains(15))
+
+    def test_case_2(self):
+        root = BST(10)
+        root.left = BST(5)
+        root.left.left = BST(2)
+        root.left.left.left = BST(1)
+        root.left.right = BST(6)
+        root.right = BST(15)
+        root.right.left = BST(13)
+        root.right.left.right = BST(14)
+        root.right.right = BST(22)
+        expected = 13
+        actual = root.findClosestValueInBST(12)
+        self.assertEqual(expected, actual)
+
+    def test_case_3(self):
+        root = BST(10)
+        root.left = BST(5)
+        root.left.right = BST(9)
+        root.right = BST(100)
+        root.right.left = BST(90)
+        root.right.left.right = BST(95)
+        root.right.right = BST(120)
+
+        expected = 10
+        actual = root.findClosestValueInBST(11)
+        self.assertEqual(expected, actual)
+
+# if __name__ == '__main__':
+#     unittest.main()
